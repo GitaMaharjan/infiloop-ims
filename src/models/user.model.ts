@@ -7,21 +7,22 @@ export enum UserRole {
     STAFF = 'STAFF'
 }
 export interface IUser extends Document {
-    username: string;
+    fullName: string;
     email: string;
     password: string;
     role: UserRole;
     organizationId: Types.ObjectId | null,
     isActive: boolean;
     deletedAt: Date | null;
+    comparePassword(candidatePassword: string): Promise<boolean>;
 }
 export type UserDocument = HydratedDocument<IUser>;
 
 const UserSchema = new Schema<IUser>({
-    username: {
+    fullName: {
         type: String,
         required: true,
-        unique: true,
+        trim: true
 
     },
     email: {

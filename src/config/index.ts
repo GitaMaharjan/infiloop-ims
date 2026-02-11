@@ -20,6 +20,9 @@ export const config = {
 
     // Environment type: 'development', 'production', or 'test'
     env: process.env.NODE_ENV || "development",
+
+    // JWT token expiration time (optional, default to '1h')
+    jwtExpiresIn: process.env.JWT_EXPIRES_IN || '1h',
 };
 
 // Safety check: Ensure critical environment variables are set

@@ -1,5 +1,4 @@
 import express from "express";
-import type { Request, Response } from "express";
 import { requestLogger } from "./middleware/requestLogger.js";
 import { globalErrorHandler } from "./middleware/errorHandler.js";
 import router from "./routes/index.js";

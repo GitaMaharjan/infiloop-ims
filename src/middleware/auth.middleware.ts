@@ -1,0 +1,50 @@
+import type { Request, Response, NextFunction } from "express";
+import { verifyToken } from "../utils/jwt.js";
+
+export interface AuthRequest extends Request {
+    user?: {
+        userId: string;
+        role: string;
+        organizationId: string | null;
+    }
+}
+
+export const authenticate = async (req: AuthRequest, res: Response, next: NextFunction) => {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return res.status(401).json({ success: false, error: 'Unauthorized: No token provided' });
+    }
+
+    const token: string = authHeader.split(' ')[1];
+    if (!token) {
+        return res.status(401).json({ success: false, error: 'Unauthorized: No token provided' });
+    }
+
+    try {
+        const payload = verifyToken(token);
+        req.user = {
+            userId: payload.userId.toString(),
+            role: payload.role,
+            organizationId: payload.organizationId ? payload.organizationId.toString() : null,
+        };
+        next();
+    } catch (error) {
+        return res.status(401).json({ success: false, error: 'Unauthorized: Invalid token' });
+    }
+}
+// Middleware to check user role
+export const requireRole = (roles: string[]) => {
+    return (req: AuthRequest, res: Response, next: NextFunction) => {
+        if (!req.user || !roles.includes(req.user.role)) {
+            return res.status(403).json({ success: false, error: 'Forbidden: Insufficient permissions' });
+        }
+        next();
+    };
+}
+// Middleware to enforce organization context
+export const requireOrganization = (req: AuthRequest, res: Response, next: NextFunction) => {
+    if (!req.user || !req.user.organizationId) {
+        return res.status(403).json({ success: false, error: 'Forbidden: Organization context required' });
+    }
+    next();
+}
