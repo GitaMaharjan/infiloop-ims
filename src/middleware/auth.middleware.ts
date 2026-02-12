@@ -15,7 +15,7 @@ export const authenticate = async (req: AuthRequest, res: Response, next: NextFu
         return res.status(401).json({ success: false, error: 'Unauthorized: No token provided' });
     }
 
-    const token: string = authHeader.split(' ')[1];
+    const token = authHeader.split(' ')[1];
     if (!token) {
         return res.status(401).json({ success: false, error: 'Unauthorized: No token provided' });
     }
@@ -31,9 +31,13 @@ export const authenticate = async (req: AuthRequest, res: Response, next: NextFu
     } catch (error) {
         return res.status(401).json({ success: false, error: 'Unauthorized: Invalid token' });
     }
+    console.log("Authorization header:", authHeader);
+    console.log("Extracted token:", token);
+    console.log("Type of token:", typeof token);
+
 }
 // Middleware to check user role
-export const requireRole = (roles: string[]) => {
+export const requireRole = (...roles: string[]) => {
     return (req: AuthRequest, res: Response, next: NextFunction) => {
         if (!req.user || !roles.includes(req.user.role)) {
             return res.status(403).json({ success: false, error: 'Forbidden: Insufficient permissions' });

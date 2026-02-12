@@ -33,7 +33,6 @@ export const loginService = async (email: string, password: string) => {
             organizationId: user.organizationId
         }
     };
-
 }
 
 export const registerService = async (

@@ -1,14 +1,27 @@
 import { Schema, model, Document, type HydratedDocument } from 'mongoose';
 
+export enum OrganizationStatus {
+    PENDING = 'PENDING',
+    APPROVED = 'APPROVED',
+    REJECTED = 'REJECTED'
+}
 /**
  * Organization Interface
  * Removed manual createdAt/updatedAt as 'timestamps: true' handles them.
  */
 export interface IOrganization {
     name: string;
-    code: string;
+    address: string;
+    contactPerson: {
+        name: string;
+        email: string;
+        phone: string;
+        designation: string;
+    }
+    code: string;//autogenerate garr affai
     slug: string;
     isActive: boolean;
+    status: OrganizationStatus;
     // Timestamps are added by Mongoose automatically
     createdAt: Date;
     updatedAt: Date;
@@ -23,6 +36,16 @@ const OrganizationSchema = new Schema<IOrganization>(
             required: true,
             unique: true,
             trim: true
+        },
+        address: {
+            type: String,
+            trim: true
+        },
+        contactPerson: {
+            name: { type: String, required: true, trim: true },
+            email: { type: String, required: true, trim: true },
+            phone: { type: String, required: true, trim: true },
+            designation: { type: String, required: true, trim: true }
         },
         code: {
             type: String,
@@ -42,6 +65,11 @@ const OrganizationSchema = new Schema<IOrganization>(
             type: Boolean,
             default: false
         },
+        status: {
+            type: String,
+            enum: Object.values(OrganizationStatus),
+            default: OrganizationStatus.PENDING
+        }
     },
     {
         timestamps: true // This automatically manages createdAt and updatedAt

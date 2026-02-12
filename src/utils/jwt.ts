@@ -7,6 +7,7 @@ export interface TokenPayload {
     role: string;
     organizationId: Types.ObjectId | null;
 }
+console.log("JWT Secret:", config.jwtSecret);
 
 export const signToken = (payload: TokenPayload): string => {
     return jwt.sign(payload, config.jwtSecret as string, { expiresIn: '1h' });
