@@ -11,14 +11,14 @@ const seedSuperAdmin = async () => {
 
         if (!adminExists) {
             await User.create({
-                fullName: 'System Administrator',
-                email: 'admin@system.com',
-                password: 'SuperSecurePassword123!', // Will be hashed by pre-save hook
+                fullName: 'Gita Maharjan',
+                email: 'gitamaharjan303@gmail.com',
+                password: 'Gita123', // Will be hashed by pre-save hook
                 role: UserRole.SUPER_ADMIN,
                 organizationId: null, // Super Admins don't belong to a specific org
                 isActive: true
             });
-            console.log(' Super Admin created: admin@system.com / SuperSecurePassword123!');
+            console.log(' Super Admin created: gitamaharjan303@gmail.com / Gita123!');
         } else {
             console.log('Super Admin already exists.');
         }

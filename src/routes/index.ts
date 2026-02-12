@@ -8,8 +8,11 @@ const router = Router();
 
 router.use("/super-admin", authSuperAdminRoutes)
 
+router.use("/organization", authOrganizationRoutes);
+
+
+
 router.use("/health", healthRoutes);
 router.use("/error-test", errorHandlerRoutes);
-router.use("/auth", authOrganizationRoutes);
 
 export default router;

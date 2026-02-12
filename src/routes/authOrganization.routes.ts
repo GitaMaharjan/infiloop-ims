@@ -1,14 +1,14 @@
 import { Router } from "express";
 
-const router = Router();
-import { RegisterController } from "../controllers/auth.controller.js";
+import { registerOrganizationWithAdminController } from "../controllers/authOrganization.controller.js";
+import { loginController } from "../controllers/authUser.controller.js";
 
+
+const router = Router();
 
 //public routes for organization registration
-router.post('/register-org', RegisterController);
-
-//private routes
-
+router.post('/register', registerOrganizationWithAdminController);
+router.post('/login', loginController)
 
 
 export const authOrganizationRoutes = router;

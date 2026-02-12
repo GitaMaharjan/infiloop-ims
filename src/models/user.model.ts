@@ -49,10 +49,9 @@ const UserSchema = new Schema<IUser>({
             return this.role !== UserRole.SUPER_ADMIN;
         }
     },
-
     isActive: {
         type: Boolean,
-        default: true
+        default: false
     },
     deletedAt: { type: Date, default: null },
 

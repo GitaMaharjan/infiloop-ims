@@ -1,32 +1,22 @@
 import type { Request, Response } from "express";
-import { loginService } from "../services/auth.service.js";
-import { UserRole } from "../models/user.model.js";
+import { approveOrganizationService } from "../services/superAdmin.service.js";
 
-
-export const SuperAdminLoginController = async (req: Request, res: Response) => {
+export const approveOrganizationController = async (req: Request, res: Response) => {
     try {
-        const { email, password } = req.body;
-        // Validation check
-        if (!email || !password) {
-            return res.status(400).json({ success: false, error: "Please provide email and password" });
-        }
-        const loginResult = await loginService(email, password);
+        // const organizationId = req.params.organizationId as string;
+        const { organizationId } = req.params;
 
-        if (loginResult.user.role !== UserRole.SUPER_ADMIN) {
-            return res.status(403).json({
-                success: false,
-                message: "Access denied. Not a super admin."
-            });
+        if (!organizationId || Array.isArray(organizationId)) {
+            return res.status(400).json({ success: false, message: "Invalid organizationId" });
         }
-        res.status(200).json({
+        const result = await approveOrganizationService(organizationId);
+
+        return res.status(200).json({
             success: true,
-            message: "Login successful",
-            ...loginResult
-        })
+            ...result
+        });
 
     } catch (error: any) {
-        res.status(401).json({ success: false, error: error.message });
+        return res.status(400).json({ success: false, message: error.message });
     }
-
-
-}
+};

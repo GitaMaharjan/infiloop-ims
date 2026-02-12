@@ -20,7 +20,6 @@ export interface IOrganization {
     }
     code: string;//autogenerate garr affai
     slug: string;
-    isActive: boolean;
     status: OrganizationStatus;
     // Timestamps are added by Mongoose automatically
     createdAt: Date;
@@ -49,7 +48,6 @@ const OrganizationSchema = new Schema<IOrganization>(
         },
         code: {
             type: String,
-            required: true,
             unique: true,
             uppercase: true,
             trim: true
@@ -61,10 +59,7 @@ const OrganizationSchema = new Schema<IOrganization>(
             trim: true
             // Removed 'required: true' because it is generated in the pre-validate hook
         },
-        isActive: {
-            type: Boolean,
-            default: false
-        },
+
         status: {
             type: String,
             enum: Object.values(OrganizationStatus),
@@ -96,10 +91,13 @@ OrganizationSchema.pre('validate', async function (this: OrganizationDocument) {
             this.slug = slugify(this.name);
         }
     }
+    if (!this.code) {
+        this.code = 'ORG-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+    }
 });
 
 // Explicit indexes for production performance
-OrganizationSchema.index({ slug: 1 }, { unique: true });
-OrganizationSchema.index({ code: 1 }, { unique: true });
+// OrganizationSchema.index({ slug: 1 }, { unique: true });
+// OrganizationSchema.index({ code: 1 }, { unique: true });
 
 export const Organization = model<IOrganization>('Organization', OrganizationSchema);
