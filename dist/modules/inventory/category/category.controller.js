@@ -1,27 +1,15 @@
-import type { Request, Response } from "express";
 import { createCategoryService, deleteCategoryService, getAllCategoriesService, getCategoryByIdService, updateCategoryService } from "./category.service.js";
-import { UserRole, type IUser } from "../../../models/user.model.js";
+import { UserRole } from "../../../models/user.model.js";
 import { sendError, sendSuccess } from "../../../utils/response.js";
-import type { Types } from "mongoose";
 import { Category } from "./category.model.js";
-
-
-export interface AuthRequest extends Request {
-    user: IUser; // now TS knows req.user exists
-}
-
-export const createCategoryController = async (req: Request, res: Response) => {
+export const createCategoryController = async (req, res) => {
     try {
-        const authReq = req as AuthRequest; // type assertion
-
+        const authReq = req; // type assertion
         const { name } = req.body;
         const user = authReq.user;
-
         if (!name || typeof name !== "string") {
             return sendError(res, "Category name is required", 400);
         }
-
-
         if (user.role !== UserRole.ORG_ADMIN) {
             return sendError(res, "You are not authorized to create categories", 403);
         }
@@ -29,97 +17,83 @@ export const createCategoryController = async (req: Request, res: Response) => {
         if (!user.organizationId) {
             return sendError(res, "User must belong to an organization", 400);
         }
-
-        const newCategory = await createCategoryService(name, user.organizationId)
+        const newCategory = await createCategoryService(name, user.organizationId);
         return sendSuccess(res, newCategory, 201);
-    } catch (error: any) {
+    }
+    catch (error) {
         return sendError(res, error.message, 400);
-
     }
-}
-
-export const getAllCategoriesController = async (req: Request, res: Response) => {
+};
+export const getAllCategoriesController = async (req, res) => {
     try {
-        const authReq = req as AuthRequest;
-        const organizationId = authReq.user.organizationId as Types.ObjectId
+        const authReq = req;
+        const organizationId = authReq.user.organizationId;
         if (!organizationId) {
-            throw new Error("You are not associated with organization")
+            throw new Error("You are not associated with organization");
         }
-
-        const categories = await getAllCategoriesService(organizationId)
-        return sendSuccess(res, categories)
-    } catch (error: any) {
-        sendError(res, error.message, 500)
+        const categories = await getAllCategoriesService(organizationId);
+        return sendSuccess(res, categories);
     }
-}
-
-export const getCategoryByIdController = async (req: Request, res: Response) => {
-
+    catch (error) {
+        sendError(res, error.message, 500);
+    }
+};
+export const getCategoryByIdController = async (req, res) => {
     try {
-        const authReq = req as AuthRequest;
-
-        const categoryId = authReq.params.id as string
-        const organizationId = authReq.user.organizationId as Types.ObjectId
+        const authReq = req;
+        const categoryId = authReq.params.id;
+        const organizationId = authReq.user.organizationId;
         if (!organizationId) {
-            throw new Error("You are not associated with organization")
+            throw new Error("You are not associated with organization");
         }
-
-        const category = await getCategoryByIdService(categoryId, organizationId)
-
+        const category = await getCategoryByIdService(categoryId, organizationId);
         if (!category) {
-            return sendError(res, "Category not found")
+            return sendError(res, "Category not found");
         }
         return sendSuccess(res, category);
-    } catch (error: any) {
-        return sendError(res, error.message, 404)
     }
-}
-export const updateCategoryController = async (req: Request, res: Response) => {
+    catch (error) {
+        return sendError(res, error.message, 404);
+    }
+};
+export const updateCategoryController = async (req, res) => {
     try {
-        const authReq = req as AuthRequest;
+        const authReq = req;
         const { name } = req.body;
-        const categoryId = authReq.params.id as string;
+        const categoryId = authReq.params.id;
         const user = authReq.user;
-
         if (!user.organizationId) {
             return sendError(res, "User must belong to an organization", 400);
         }
-
         if (!name || typeof name !== "string") {
             return sendError(res, "Category name is required", 400);
         }
-
         if (user.role !== UserRole.ORG_ADMIN) {
             return sendError(res, "You are not authorized to update categories", 403);
         }
-
         const updatedCategory = await updateCategoryService(categoryId, name, user.organizationId);
-
         return sendSuccess(res, updatedCategory);
-    } catch (error: any) {
+    }
+    catch (error) {
         return sendError(res, error.message, 400);
     }
 };
-
-
-export const deleteCategoryController = async (req: Request, res: Response) => {
+export const deleteCategoryController = async (req, res) => {
     try {
-        const authReq = req as AuthRequest;
-        const categoryId = authReq.params.id as string;
+        const authReq = req;
+        const categoryId = authReq.params.id;
         const user = authReq.user;
-
         if (!user.organizationId) {
             return sendError(res, "User must belong to an organization", 400);
         }
-
         if (user.role !== UserRole.ORG_ADMIN) {
             return sendError(res, "You are not authorized to delete categories", 403);
         }
-
         const deletedCategory = await deleteCategoryService(categoryId, user.organizationId);
-
         return sendSuccess(res, deletedCategory);
-    } catch (error: any) {
+    }
+    catch (error) {
         return sendError(res, error.message, 400);
     }
 };
+//# sourceMappingURL=category.controller.js.map

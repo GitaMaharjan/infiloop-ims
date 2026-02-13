@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { authenticate, requireOrganization, requireRole } from "../../../middleware/auth.middleware.js";
-import { createCategoryController, getAllCategoriesControleller } from "./category.controller.js";
+import { createCategoryController, deleteCategoryController, getAllCategoriesController, getCategoryByIdController, updateCategoryController } from "./category.controller.js";
 import { UserRole } from "../../../models/user.model.js";
 
 const router = Router();
@@ -13,9 +13,36 @@ router.post(
     requireOrganization,
     createCategoryController
 );
+
+// GET ALL
 router.get("/all-categories",
     authenticate,
     requireRole(UserRole.ORG_ADMIN, UserRole.STAFF),
     requireOrganization,
-    getAllCategoriesControleller)
+    getAllCategoriesController)
+
+// GET BY ID
+router.get("/category/:id", authenticate,
+    requireRole(UserRole.ORG_ADMIN, UserRole.STAFF),
+    requireOrganization,
+    getCategoryByIdController);
+
+// UPDATE CATEGORY
+router.put(
+    "/update-category/:id",
+    authenticate,
+    requireRole(UserRole.ORG_ADMIN),
+    requireOrganization,
+    updateCategoryController
+);
+
+// DELETE CATEGORY 
+router.delete(
+    "/delete-category/:id",
+    authenticate,
+    requireRole(UserRole.ORG_ADMIN),
+    requireOrganization,
+    deleteCategoryController
+);
+
 export const categoryRoutes = router;

@@ -1,0 +1,12 @@
+import type { Request, Response, NextFunction } from "express";
+export interface AuthRequest extends Request {
+    user?: {
+        userId: string;
+        role: string;
+        organizationId: string | null;
+    };
+}
+export declare const authenticate: (req: AuthRequest, res: Response, next: NextFunction) => Promise<Response<any, Record<string, any>> | undefined>;
+export declare const requireRole: (...roles: string[]) => (req: AuthRequest, res: Response, next: NextFunction) => Response<any, Record<string, any>> | undefined;
+export declare const requireOrganization: (req: AuthRequest, res: Response, next: NextFunction) => Response<any, Record<string, any>> | undefined;
+//# sourceMappingURL=auth.middleware.d.ts.map
