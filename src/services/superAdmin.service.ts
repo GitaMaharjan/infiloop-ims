@@ -12,6 +12,7 @@ export const approveOrganizationService = async (organizationId: string) => {
 
     //  Update organization status to APPROVED
     org.status = OrganizationStatus.APPROVED;
+
     await org.save();
 
     // Activate all ORG_ADMINs in this organization

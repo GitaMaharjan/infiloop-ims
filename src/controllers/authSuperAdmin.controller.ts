@@ -30,3 +30,4 @@ export const SuperAdminLoginController = async (req: Request, res: Response) => 
 
 
 }
+

@@ -3,6 +3,7 @@ import { Router } from "express";
 import { errorHandlerRoutes } from "./errorHandler.routes.js";
 import { authOrganizationRoutes } from "./authOrganization.routes.js";
 import { authSuperAdminRoutes } from "./authSuperAdmin.routes.js";
+import { refreshTokenRoutes } from "./refreshToken.routes.js";
 
 const router = Router();
 
@@ -11,7 +12,7 @@ router.use("/super-admin", authSuperAdminRoutes)
 router.use("/organization", authOrganizationRoutes);
 
 
-
+router.use("/auth", refreshTokenRoutes)
 router.use("/health", healthRoutes);
 router.use("/error-test", errorHandlerRoutes);
 

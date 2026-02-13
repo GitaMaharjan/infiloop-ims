@@ -18,6 +18,9 @@ export const config = {
     // JWT secret key (required for authentication)
     jwtSecret: process.env.JWT_SECRET as string,
 
+    // JWT secret key for refresh
+    jwtRefreshSecret: process.env.JWT_SECRET as string,
+
     // Environment type: 'development', 'production', or 'test'
     env: process.env.NODE_ENV || "development",
 

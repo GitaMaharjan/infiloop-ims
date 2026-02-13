@@ -13,6 +13,7 @@ export interface IUser extends Document {
     role: UserRole;
     organizationId: Types.ObjectId | null,
     isActive: boolean;
+    refreshToken: string | null;
     deletedAt: Date | null;
     comparePassword(candidatePassword: string): Promise<boolean>;
 }
@@ -52,6 +53,11 @@ const UserSchema = new Schema<IUser>({
     isActive: {
         type: Boolean,
         default: false
+    },
+    refreshToken: {
+        type: String,
+        default: null,
+        select: false // never expose in queries
     },
     deletedAt: { type: Date, default: null },
 

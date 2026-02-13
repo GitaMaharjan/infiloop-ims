@@ -1,7 +1,8 @@
 import { Router } from "express";
 
-import { registerOrganizationWithAdminController } from "../controllers/authOrganization.controller.js";
-import { loginController } from "../controllers/authUser.controller.js";
+import { loginController, registerOrganizationWithAdminController } from "../controllers/authOrganizationUser.controller.js";
+import { logOutUserController } from "../controllers/logOutUser.controller.js";
+
 
 
 const router = Router();
@@ -9,6 +10,7 @@ const router = Router();
 //public routes for organization registration
 router.post('/register', registerOrganizationWithAdminController);
 router.post('/login', loginController)
+router.post('/logout', logOutUserController)
 
 
 export const authOrganizationRoutes = router;
