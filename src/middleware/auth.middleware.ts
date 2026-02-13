@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from "express";
-import { verifyToken } from "../utils/jwt.js";
+import { verifyRefreshToken } from "../utils/token.js";
 
 export interface AuthRequest extends Request {
     user?: {
@@ -21,7 +21,7 @@ export const authenticate = async (req: AuthRequest, res: Response, next: NextFu
     }
 
     try {
-        const payload = verifyToken(token);
+        const payload = verifyRefreshToken(token);
         req.user = {
             userId: payload.userId.toString(),
             role: payload.role,
