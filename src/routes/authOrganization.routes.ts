@@ -4,10 +4,13 @@ import { loginController, registerOrganizationWithAdminController } from "../con
 import { logOutUserController } from "../controllers/logOutUser.controller.js";
 import { UserRole } from "../models/user.model.js";
 import { authenticate, requireRole } from "../middleware/auth.middleware.js";
+import { categoryRoutes } from "../modules/inventory/category/category.routes.js";
 
 
 
 const router = Router();
+
+
 
 //public routes for organization registration
 router.post('/register', registerOrganizationWithAdminController);
@@ -21,6 +24,8 @@ router.post('/dashboard', (req, res) => {
 })
 router.post('/logout', logOutUserController)
 
+
+router.use("/", categoryRoutes);
 
 
 export const authOrganizationRoutes = router;
